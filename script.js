@@ -183,7 +183,6 @@ function renderContent() {
 
 function loadChapter(index, scroll) {
   if (index < 0 || index >= loadedChapters.length) return;
-  if (typeof tts !== 'undefined') tts.stop();
   currentChapterIndex = index;
   renderContent();
   prevBtn.disabled = index === 0;
@@ -265,94 +264,6 @@ searchInput.addEventListener('input', () => {
 /* ---- 8. Font size ---- */
 fontIncrease.addEventListener('click', () => { if (currentFontSize < 28) { currentFontSize += 2; applyFontSize(); } });
 fontDecrease.addEventListener('click', () => { if (currentFontSize > 14) { currentFontSize -= 2; applyFontSize(); } });
-
-/* ---- 8b. Text-to-speech (Web Speech API, paragraph queue + highlight) ---- */
-const ttsToggle = $('ttsToggle');
-const ttsStop = $('ttsStop');
-const ttsIcon = $('ttsIcon');
-
-const tts = {
-  supported: typeof window !== 'undefined' && 'speechSynthesis' in window,
-  synth: (typeof window !== 'undefined' && window.speechSynthesis) ? window.speechSynthesis : null,
-  queue: [],
-  index: 0,
-  state: 'stopped',
-  voice: null,
-  timer: null,
-  pickVoice() {
-    if (!this.synth) return;
-    const voices = this.synth.getVoices() || [];
-    this.voice = voices.find((v) => /^ar/i.test(v.lang)) || voices.find((v) => /ar/i.test(v.lang + ' ' + v.name)) || null;
-  },
-  clearHighlight() {
-    chapterContent.querySelectorAll('.tts-highlight').forEach((el) => el.classList.remove('tts-highlight'));
-  },
-  ui(state) {
-    this.state = state;
-    if (ttsIcon) ttsIcon.textContent = state === 'playing' ? '⏸️' : (state === 'paused' ? '▶️' : '🔊');
-    if (ttsStop) ttsStop.classList.toggle('hidden', state === 'stopped');
-  },
-  start() {
-    if (!this.supported) { alert('عذراً، متصفحك لا يدعم القراءة الصوتية.'); return; }
-    const blocks = Array.from(chapterContent.querySelectorAll('p')).filter((el) => el.textContent.trim().length > 5);
-    if (!blocks.length) { alert('لا يوجد نص لقراءته.'); return; }
-    clearTimeout(this.timer);
-    if (this.synth) this.synth.cancel();
-    this.pickVoice();
-    this.queue = blocks;
-    this.index = 0;
-    this.ui('playing');
-    this.timer = setTimeout(() => this.playNext(), 150);
-  },
-  playNext() {
-    if (this.state !== 'playing') return;
-    if (this.index >= this.queue.length) { this.stop(); return; }
-    this.clearHighlight();
-    const el = this.queue[this.index];
-    el.classList.add('tts-highlight');
-    try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
-    const u = new SpeechSynthesisUtterance(el.textContent.trim());
-    if (this.voice) u.voice = this.voice;
-    u.lang = this.voice ? this.voice.lang : 'ar-SA';
-    u.rate = 0.95;
-    u.onend = () => {
-      if (this.state !== 'playing') return;
-      this.index++;
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => this.playNext(), 320);
-    };
-    u.onerror = (e) => {
-      if (this.state !== 'playing') return;
-      if (e && (e.error === 'interrupted' || e.error === 'canceled')) return;
-      this.index++;
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => this.playNext(), 320);
-    };
-    this.synth.speak(u);
-  },
-  pause() { clearTimeout(this.timer); if (this.synth) this.synth.pause(); this.ui('paused'); },
-  resume() {
-    this.ui('playing');
-    if (this.synth) this.synth.resume();
-    if (this.synth && !this.synth.speaking && this.index < this.queue.length) {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => this.playNext(), 150);
-    }
-  },
-  stop() { clearTimeout(this.timer); if (this.synth) this.synth.cancel(); this.clearHighlight(); this.queue = []; this.index = 0; this.ui('stopped'); },
-  toggle() {
-    if (!this.supported) { alert('عذراً، متصفحك لا يدعم القراءة الصوتية.'); return; }
-    if (this.state === 'playing') this.pause();
-    else if (this.state === 'paused') this.resume();
-    else this.start();
-  }
-};
-if (tts.synth) {
-  tts.pickVoice();
-  tts.synth.addEventListener('voiceschanged', () => tts.pickVoice());
-}
-ttsToggle.addEventListener('click', () => tts.toggle());
-ttsStop.addEventListener('click', () => tts.stop());
 
 /* ---- 9. Pagination ---- */
 prevBtn.addEventListener('click', () => { if (currentChapterIndex > 0) loadChapter(currentChapterIndex - 1); });
