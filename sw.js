@@ -17,6 +17,13 @@ async function precacheAll(cache, urls, concurrency = 4) {
   await Promise.all(Array.from({ length: concurrency }, worker));
 }
 
+async function cacheCdn(cache, url) {
+  for (let t = 0; t < 3; t++) {
+    try { const r = await fetch(url, { mode: 'no-cors' }); if (r) { await cache.put(url, r); } return; }
+    catch (e) { await new Promise((r) => setTimeout(r, 300)); }
+  }
+}
+
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil((async () => {
@@ -30,9 +37,7 @@ self.addEventListener('install', (event) => {
         await precacheAll(cache, man.map((m) => m.file));
       }
     } catch (e) {}
-    await Promise.all(CDN.map((u) =>
-      fetch(u, { mode: 'no-cors' }).then((r) => { if (r) return cache.put(u, r); }).catch(() => {})
-    ));
+    await Promise.all(CDN.map((u) => cacheCdn(cache, u)));
   })());
 });
 
