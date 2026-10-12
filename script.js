@@ -36,8 +36,35 @@ function stripHtml(html) {
   d.innerHTML = html || '';
   return (d.textContent || d.innerText || '');
 }
+function normalizeArabic(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, '')
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .replace(/ؤ/g, 'و')
+    .replace(/ئ/g, 'ي')
+    .toLowerCase()
+    .trim();
+}
+const DIAC = '[\\u064B-\\u0652\\u0670\\u0640]*';
+function arabicCharClass(ch) {
+  switch (ch) {
+    case 'ا': return '[اأإآٱ]';
+    case 'ه': return '[هة]';
+    case 'ي': return '[يىئ]';
+    case 'و': return '[وؤ]';
+    default: return escapeRegExp(ch);
+  }
+}
+function termToPattern(term) {
+  const norm = normalizeArabic(term);
+  if (!norm) return '';
+  return DIAC + Array.from(norm).map(arabicCharClass).join(DIAC) + DIAC;
+}
 function chapterText(ch) {
-  if (ch._text == null) ch._text = stripHtml(ch.content).toLowerCase();
+  if (ch._text == null) ch._text = normalizeArabic(stripHtml(ch.content));
   return ch._text;
 }
 function fetchWithTimeout(url, ms) {
@@ -79,10 +106,11 @@ sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
 
 /* ---- 3. Highlight (multi-term, safe) ---- */
 function highlightSearchTerm(root, query) {
-  const ts = terms(query);
+  const ts = terms(query).map(normalizeArabic).filter(Boolean);
   if (!ts.length) return;
-  const re = new RegExp('(' + ts.map(escapeRegExp).join('|') + ')', 'gi');
-  const low = ts.map((t) => t.toLowerCase());
+  const patterns = ts.map(termToPattern).filter(Boolean);
+  if (!patterns.length) return;
+  const re = new RegExp('(' + patterns.join('|') + ')', 'gi');
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
   const nodes = [];
   let n;
@@ -96,7 +124,7 @@ function highlightSearchTerm(root, query) {
     const frag = document.createDocumentFragment();
     parts.forEach((part) => {
       if (!part) return;
-      if (low.indexOf(part.toLowerCase()) >= 0) {
+      if (ts.indexOf(normalizeArabic(part)) >= 0) {
         const span = document.createElement('span');
         span.className = 'bg-green-200 dark:bg-green-900/60 text-green-900 dark:text-green-200 px-1 rounded font-semibold transition-colors';
         span.textContent = part;
@@ -111,12 +139,12 @@ function highlightSearchTerm(root, query) {
 
 /* ---- 4. Search across all chapters ---- */
 function doSearch(query) {
-  const ts = terms(query).map((t) => t.toLowerCase());
+  const ts = terms(query).map(normalizeArabic).filter(Boolean);
   if (!ts.length) return null;
   const matches = [];
   let total = 0;
   loadedChapters.forEach((ch, idx) => {
-    const title = (ch.title || '').toLowerCase();
+    const title = normalizeArabic(ch.title || '');
     const body = chapterText(ch);
     let count = 0;
     ts.forEach((t) => {

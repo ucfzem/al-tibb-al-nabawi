@@ -1,4 +1,4 @@
-const CACHE = 'tibb-nabawi-v1.0.4';
+const CACHE = 'tibb-nabawi-v1.0.5';
 const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
