@@ -1,4 +1,4 @@
-const CACHE = 'tibb-nabawi-v1.0.3';
+const CACHE = 'tibb-nabawi-v1.0.4';
 const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -35,5 +35,19 @@ self.addEventListener('fetch', (event) => {
         return res;
       }).catch(() => caches.match(req))
     );
+    return;
   }
+
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req).then((res) => {
+        if (res && (res.ok || res.type === 'opaque')) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      }).catch(() => cached);
+    })
+  );
 });
