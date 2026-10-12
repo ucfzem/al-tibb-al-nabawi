@@ -63,6 +63,143 @@ function termToPattern(term) {
   if (!norm) return '';
   return DIAC + Array.from(norm).map(arabicCharClass).join(DIAC) + DIAC;
 }
+
+const SYNONYM_GROUPS = [
+  ['الحبة السوداء', 'حبة السوداء', 'حبة البركة', 'الحبة البركة', 'الشونيز', 'شونيز', 'الكمون الأسود'],
+  ['العسل', 'عسل النحل', 'الشهد', 'شهد'],
+  ['الحلبة', 'حلبة'],
+  ['القسط', 'قسط', 'القسط الهندي', 'قسط هندي', 'القسط البحري', 'قسط بحري', 'الكست', 'كست'],
+  ['السنا', 'سنا', 'السنامكي', 'سنامكي', 'عشبة السنا', 'سنامكة'],
+  ['الشيح', 'شيح', 'الأفسنتين', 'أفسنتين'],
+  ['السعد', 'سعد'],
+  ['الزنجبيل', 'زنجبيل'],
+  ['الكافور', 'كافور'],
+  ['الحناء', 'حناء'],
+  ['الآس', 'آس', 'المرسين', 'مرسين'],
+  ['الريحان', 'ريحان', 'الحبق', 'حبق'],
+  ['اليانسون', 'يانسون', 'الأنيسون', 'أنيسون'],
+  ['الكمون', 'كمون'],
+  ['الكزبرة', 'كزبرة', 'الكزبر', 'كزبر'],
+  ['الدباء', 'دباء', 'القرع', 'قرع', 'اليقطين', 'يقطين'],
+  ['الرمان', 'رمان'],
+  ['التين', 'تين'],
+  ['الزيتون', 'زيتون'],
+  ['التمر', 'تمر', 'البلح', 'بلح', 'الرطب', 'رطب'],
+  ['العنب', 'عنب', 'الزبيب', 'زبيب'],
+  ['الخل', 'خل'],
+  ['السذاب', 'سذاب', 'الفيجل', 'فيجل'],
+  ['الحرمل', 'حرمل'],
+  ['الهيل', 'هيل', 'الحبهان', 'حبهان'],
+  ['بذر الكتان', 'الكتان', 'كتان', 'بزر الكتان'],
+  ['الصبر', 'صبر', 'الألوة', 'ألوة'],
+  ['الزعفران', 'زعفران'],
+  ['الورس', 'ورس'],
+  ['الثوم', 'ثوم'],
+  ['البصل', 'بصل'],
+  ['الكراث', 'كراث'],
+  ['الخردل', 'خردل'],
+  ['الشعير', 'شعير', 'التلبينة', 'تلبينة'],
+  ['الزعتر', 'زعتر', 'السعتر', 'سعتر', 'العتر', 'عتر'],
+  ['اللبن', 'لبن', 'الحليب', 'حليب'],
+  ['السمن', 'سمن'],
+  ['الكحل', 'كحل', 'الإثمد', 'إثمد'],
+  ['الحجامة', 'حجامة'],
+  ['الفصد', 'فصد'],
+  ['الزيت', 'زيت', 'الدهن', 'دهن'],
+  ['المر', 'مر', 'اللبان', 'لبان'],
+  ['القلب', 'قلب', 'الفؤاد', 'فؤاد'],
+  ['الكبد', 'كبد'],
+  ['المعدة', 'معدة'],
+  ['الكلى', 'كلى', 'الكلية', 'كلية', 'الكليتين'],
+  ['الأمعاء', 'أمعاء', 'المصارين', 'مصارين', 'المعي', 'معي'],
+  ['الرئة', 'رئة', 'الرئتين', 'رئتين'],
+  ['الطحال', 'طحال'],
+  ['المرارة', 'مرارة'],
+  ['البنكرياس', 'بنكرياس', 'المعثكلة', 'معثكلة'],
+  ['المثانة', 'مثانة'],
+  ['الرحم', 'رحم'],
+  ['الجلد', 'جلد', 'البشرة', 'بشرة'],
+  ['العظم', 'عظم', 'العظام', 'عظام'],
+  ['العصب', 'عصب', 'الأعصاب', 'أعصاب'],
+  ['الدم', 'دم'],
+  ['الشرايين', 'شرايين', 'الشريان', 'شريان', 'الأوردة', 'أوردة', 'الوريد', 'وريد', 'العروق', 'عروق'],
+  ['الرأس', 'رأس', 'الهامة', 'هامة'],
+  ['الكتف', 'كتف', 'الكتفين', 'المنكب', 'منكب', 'المنكبين'],
+  ['الركبة', 'ركبة', 'الركبتين', 'الركبتان'],
+  ['الظهر', 'ظهر', 'العمود الفقري', 'عمود فقري'],
+  ['الصدر', 'صدر', 'القفص الصدري'],
+  ['اللسان', 'لسان'],
+  ['الحلق', 'حلق', 'الحلقوم', 'حلقوم', 'البلعوم', 'بلعوم'],
+  ['المريء', 'مريء'],
+  ['اليد', 'يد', 'اليدين', 'الكف', 'كف', 'الكفين'],
+  ['القدم', 'قدم', 'القدمان', 'الساق', 'ساق'],
+  ['الأنف', 'أنف', 'المنخر', 'منخر', 'المنخرين'],
+  ['الأذن', 'أذن', 'الأذنين'],
+  ['العين', 'عين', 'العينين'],
+  ['المفاصل', 'مفاصل', 'المفصل', 'مفصل'],
+  ['الغدد', 'غدد', 'الغدة', 'غدة'],
+  ['الحبل الشوكي', 'النخاع', 'نخاع']
+];
+
+const SYN_INDEX = (() => {
+  const idx = new Map();
+  SYNONYM_GROUPS.forEach((group, gi) => {
+    group.forEach((name) => {
+      const n = normalizeArabic(name);
+      if (!n) return;
+      if (!idx.has(n)) idx.set(n, new Set());
+      idx.get(n).add(gi);
+    });
+  });
+  return idx;
+})();
+
+function expandArabicTerms(ts) {
+  const out = new Set();
+  ts.forEach((t) => {
+    out.add(t);
+    const groups = SYN_INDEX.get(t);
+    if (groups) {
+      groups.forEach((gi) => SYNONYM_GROUPS[gi].forEach((name) => {
+        const n = normalizeArabic(name);
+        if (n) out.add(n);
+      }));
+    }
+  });
+  return Array.from(out);
+}
+
+function isArabicLetter(ch) { return /[\u0621-\u064A]/.test(ch || ''); }
+function atWordBoundary(s, ix, len) {
+  const before = ix > 0 ? s[ix - 1] : '';
+  const after = ix + len < s.length ? s[ix + len] : '';
+  return !isArabicLetter(before) && !isArabicLetter(after);
+}
+function countTerm(body, term, whole) {
+  let c = 0, p = 0, ix;
+  while ((ix = body.indexOf(term, p)) >= 0) {
+    if (!whole || atWordBoundary(body, ix, term.length)) c++;
+    p = ix + term.length;
+  }
+  return c;
+}
+function isWholeTerm(t, primarySet) { return !primarySet.has(t) || SYN_INDEX.has(t); }
+function queryTerms(query) {
+  const qNorm = normalizeArabic(query);
+  if (!qNorm) return [];
+  if (SYN_INDEX.has(qNorm)) return [qNorm];
+  return terms(qNorm);
+}
+function titleMatches(title, term, whole) {
+  if (!whole) return title.indexOf(term) >= 0;
+  let p = 0, ix;
+  while ((ix = title.indexOf(term, p)) >= 0) {
+    if (atWordBoundary(title, ix, term.length)) return true;
+    p = ix + term.length;
+  }
+  return false;
+}
+
 function chapterText(ch) {
   if (ch._text == null) ch._text = normalizeArabic(stripHtml(ch.content));
   return ch._text;
@@ -106,11 +243,19 @@ sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
 
 /* ---- 3. Highlight (multi-term, safe) ---- */
 function highlightSearchTerm(root, query) {
-  const ts = terms(query).map(normalizeArabic).filter(Boolean);
-  if (!ts.length) return;
-  const patterns = ts.map(termToPattern).filter(Boolean);
+  const primary = queryTerms(query);
+  if (!primary.length) return;
+  const primarySet = new Set(primary);
+  const ts = expandArabicTerms(primary);
+  const patterns = ts.map((t) => {
+    const p = termToPattern(t);
+    if (!p) return '';
+    return isWholeTerm(t, primarySet) ? '(?<![\\u0621-\\u064A])' + p + '(?![\\u0621-\\u064A])' : p;
+  }).filter(Boolean);
   if (!patterns.length) return;
-  const re = new RegExp('(' + patterns.join('|') + ')', 'gi');
+  let re;
+  try { re = new RegExp('(' + patterns.join('|') + ')', 'gi'); }
+  catch (e) { re = new RegExp('(' + ts.map(termToPattern).filter(Boolean).join('|') + ')', 'gi'); }
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
   const nodes = [];
   let n;
@@ -139,19 +284,20 @@ function highlightSearchTerm(root, query) {
 
 /* ---- 4. Search across all chapters ---- */
 function doSearch(query) {
-  const ts = terms(query).map(normalizeArabic).filter(Boolean);
-  if (!ts.length) return null;
+  const primary = queryTerms(query);
+  if (!primary.length) return null;
+  const primarySet = new Set(primary);
+  const all = expandArabicTerms(primary);
+  const whole = new Map();
+  all.forEach((t) => whole.set(t, isWholeTerm(t, primarySet)));
   const matches = [];
   let total = 0;
   loadedChapters.forEach((ch, idx) => {
     const title = normalizeArabic(ch.title || '');
     const body = chapterText(ch);
     let count = 0;
-    ts.forEach((t) => {
-      let p = 0, ix;
-      while ((ix = body.indexOf(t, p)) >= 0) { count++; p = ix + t.length; }
-    });
-    const tmatch = ts.every((t) => title.indexOf(t) >= 0);
+    all.forEach((t) => { count += countTerm(body, t, whole.get(t)); });
+    const tmatch = all.some((t) => titleMatches(title, t, whole.get(t)));
     if (count > 0 || tmatch) { matches.push({ idx, ch, count }); total += count; }
   });
   return { matches, total };
