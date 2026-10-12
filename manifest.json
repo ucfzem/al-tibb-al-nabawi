@@ -11,22 +11,22 @@
  },
  {
   "id": 3,
-  "title": "فصل (ص 4)",
+  "title": "[فصل]",
   "file": "chapters/ch-003.json"
  },
  {
   "id": 4,
-  "title": "فصل (ص 6)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-004.json"
  },
  {
   "id": 5,
-  "title": "فصل (ص 7)",
+  "title": "[فصل]",
   "file": "chapters/ch-005.json"
  },
  {
   "id": 6,
-  "title": "فَصْلٌ فِي هَدْيِهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ فِي الِاحْتِمَاءِ مِنَ التَّخَمِ",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-006.json"
  },
  {
@@ -41,7 +41,7 @@
  },
  {
   "id": 9,
-  "title": "فصل (ص 27)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-009.json"
  },
  {
@@ -51,7 +51,7 @@
  },
  {
   "id": 11,
-  "title": "فصل (ص 32)",
+  "title": "[فصل]",
   "file": "chapters/ch-011.json"
  },
  {
@@ -81,7 +81,7 @@
  },
  {
   "id": 17,
-  "title": "فصل (ص 42)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-017.json"
  },
  {
@@ -96,7 +96,7 @@
  },
  {
   "id": 20,
-  "title": "فصل (ص 46)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-020.json"
  },
  {
@@ -131,7 +131,7 @@
  },
  {
   "id": 27,
-  "title": "فصل (ص 58)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-027.json"
  },
  {
@@ -171,7 +171,7 @@
  },
  {
   "id": 35,
-  "title": "فصل (ص 73)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-035.json"
  },
  {
@@ -186,7 +186,7 @@
  },
  {
   "id": 38,
-  "title": "فصل (ص 77)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-038.json"
  },
  {
@@ -241,7 +241,7 @@
  },
  {
   "id": 49,
-  "title": "فصل (ص 92)",
+  "title": "[فصل]",
   "file": "chapters/ch-049.json"
  },
  {
@@ -251,12 +251,12 @@
  },
  {
   "id": 51,
-  "title": "فصل (ص 95)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-051.json"
  },
  {
   "id": 52,
-  "title": "فصل (ص 96)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-052.json"
  },
  {
@@ -271,22 +271,22 @@
  },
  {
   "id": 55,
-  "title": "فصل (ص 102)",
+  "title": "[فصل]",
   "file": "chapters/ch-055.json"
  },
  {
   "id": 56,
-  "title": "فصل (ص 103)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-056.json"
  },
  {
   "id": 57,
-  "title": "فصل (ص 104)",
+  "title": "[فصل]",
   "file": "chapters/ch-057.json"
  },
  {
   "id": 58,
-  "title": "فصل (ص 106)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-058.json"
  },
  {
@@ -311,27 +311,27 @@
  },
  {
   "id": 63,
-  "title": "فصل (ص 122)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-063.json"
  },
  {
   "id": 64,
-  "title": "فصل (ص 124)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-064.json"
  },
  {
   "id": 65,
-  "title": "فصل (ص 125)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-065.json"
  },
  {
   "id": 66,
-  "title": "فصل (ص 126)",
+  "title": "[فصل]",
   "file": "chapters/ch-066.json"
  },
  {
   "id": 67,
-  "title": "فصل (ص 127)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-067.json"
  },
  {
@@ -341,7 +341,7 @@
  },
  {
   "id": 69,
-  "title": "فصل (ص 130)",
+  "title": "[فصل]",
   "file": "chapters/ch-069.json"
  },
  {
@@ -396,7 +396,7 @@
  },
  {
   "id": 80,
-  "title": "فصل (ص 159)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-080.json"
  },
  {
@@ -406,37 +406,37 @@
  },
  {
   "id": 82,
-  "title": "فصل (ص 163)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-082.json"
  },
  {
   "id": 83,
-  "title": "فصل (ص 165)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-083.json"
  },
  {
   "id": 84,
-  "title": "فصل (ص 168)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-084.json"
  },
  {
   "id": 85,
-  "title": "فصل (ص 169)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-085.json"
  },
  {
   "id": 86,
-  "title": "فصل (ص 171)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-086.json"
  },
  {
   "id": 87,
-  "title": "فصل (ص 172)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-087.json"
  },
  {
   "id": 88,
-  "title": "فصل (ص 174)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-088.json"
  },
  {
@@ -451,22 +451,22 @@
  },
  {
   "id": 91,
-  "title": "فصل (ص 182)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-091.json"
  },
  {
   "id": 92,
-  "title": "فصل (ص 185)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-092.json"
  },
  {
   "id": 93,
-  "title": "فصل (ص 188)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-093.json"
  },
  {
   "id": 94,
-  "title": "فصل (ص 196)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-094.json"
  },
  {
@@ -476,17 +476,17 @@
  },
  {
   "id": 96,
-  "title": "فصل (ص 199)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-096.json"
  },
  {
   "id": 97,
-  "title": "فصل (ص 202)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-097.json"
  },
  {
   "id": 98,
-  "title": "فصل (ص 203)",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-098.json"
  },
  {
@@ -651,7 +651,7 @@
  },
  {
   "id": 131,
-  "title": "المقدمة ٥",
+  "title": "فَصْلٌ",
   "file": "chapters/ch-131.json"
  }
 ]

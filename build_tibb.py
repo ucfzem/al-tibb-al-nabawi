@@ -18,6 +18,26 @@ if starts[0][0]!=1: starts.insert(0,(1,'[مقدمة المحقق]',0))
 DIAC=re.compile('[\u064B-\u0652\u0670\u0640]')
 def diac(t): return DIAC.sub('',t)
 head_re=re.compile(r'^\s*[\[\(«]?\s*(فصل|فصول|ذكر|القسم|حرف|باب|المقدمة|مقدمة|تنبيه|فائدة|خاتمة)\b')
+TERM=re.compile(r'[.؟?!:۔…»”]\s*$')
+
+def merge_paras(paras):
+    # paras: list of (is_head,txt); glue consecutive body lines whose
+    # predecessor lacks terminal punctuation (Shamela splits every
+    # printed line into its own <p>), breaking on real headings.
+    out=[]; buf=''
+    def flush():
+        nonlocal buf
+        if buf: out.append((False,buf)); buf=''
+    for is_head,txt in paras:
+        d=diac(txt).strip()
+        if is_head or (head_re.match(d) and len(d)<=95):
+            flush(); out.append((is_head,txt)); continue
+        buf=(buf+' '+txt) if buf else txt
+        if TERM.search(buf) or len(buf)>1500:
+            flush()
+    flush()
+    return out
+
 
 def clean_nass(nass):
     out=[]
@@ -53,11 +73,13 @@ for i,(pg,toc_title,depth) in enumerate(starts):
     if title in ('فصل','-') or len(title)<3:
         title=page_heading(pg) or by_page[pg]['title'] or title
     body_parts=[]
+    paras=[]
     for pnum in range(pg,end):
         pgd=by_page.get(pnum)
         if not pgd: continue
-        for is_head,txt in clean_nass(pgd['nass']):
-            body_parts.append(para_html(is_head,txt))
+        paras += clean_nass(pgd['nass'])
+    for is_head,txt in merge_paras(paras):
+        body_parts.append(para_html(is_head,txt))
     if not body_parts: continue
     ch_id+=1
     chapters.append({"id":ch_id,"title":title,"content":"".join(body_parts)})

@@ -1,4 +1,4 @@
-const CACHE = 'tibb-nabawi-v1.0.8';
+const CACHE = 'tibb-nabawi-v1.0.9';
 const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './manifest.json'];
 const CDN = [
   'https://cdn.tailwindcss.com',
