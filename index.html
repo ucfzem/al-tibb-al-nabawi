@@ -29,6 +29,8 @@
         body { font-family: 'Cairo', sans-serif; }
         .text-reading { font-family: 'Amiri', serif; line-height: 2.2; overflow-wrap: break-word; }
         #chapterContent { min-width: 0; }
+        .tts-highlight { background: rgba(217,119,6,.12); border-inline-start: 4px solid #d97706; border-radius: 8px; padding-inline-start: 10px; transition: background .3s ease; }
+        .dark .tts-highlight { background: rgba(251,191,36,.16); }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: rgba(217,119,6,.45); border-radius: 4px; }
     </style>
@@ -37,7 +39,7 @@
 
     <!-- Top Navigation Bar -->
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[4rem] py-2 flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center space-x-3 space-x-reverse">
                 <button id="sidebarToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden focus:outline-none" aria-label="القائمة">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -50,6 +52,13 @@
 
             <!-- Controls: Theme Toggle & Font Resizer -->
             <div class="flex items-center space-x-2 space-x-reverse">
+                <!-- TTS listen button -->
+                <button id="ttsToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-base" title="استماع للفصل" aria-label="استماع">
+                    <span id="ttsIcon">🔊</span>
+                </button>
+                <button id="ttsStop" class="hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-base" title="إيقاف القراءة" aria-label="إيقاف">
+                    <span>⏹️</span>
+                </button>
                 <!-- Theme Toggle Button -->
                 <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="تبديل النمط المظلم/الفاتح">
                     <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
