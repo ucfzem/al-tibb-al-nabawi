@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الطب النبوي — الإمام ابن قيم الجوزية</title>
+    <meta name="description" content="الطب النبوي للإمام ابن قيم الجوزية — قراءة أوفلاين مع بحث فوري وإبراز أخضر.">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="./site.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        amiri: ['Amiri', 'serif'],
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Amiri & Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .text-reading { font-family: 'Amiri', serif; line-height: 2.2; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: rgba(217,119,6,.45); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <button id="sidebarToggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden focus:outline-none" aria-label="القائمة">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-amiri">الطب النبوي</h1>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">للإمام ابن قيم الجوزية (ت 751هـ)</p>
+                </div>
+            </div>
+
+            <!-- Controls: Theme Toggle & Font Resizer -->
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="تبديل النمط المظلم/الفاتح">
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Font Resizer -->
+                <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+                    <button id="fontDecrease" class="px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition">A-</button>
+                    <span id="fontSizeIndicator" class="px-2 text-xs font-semibold text-slate-500 dark:text-slate-400">18px</span>
+                    <button id="fontIncrease" class="px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition">A+</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Layout Container -->
+    <div class="max-w-7xl mx-auto w-full flex-1 flex px-4 sm:px-6 lg:px-8 py-6 gap-6 relative">
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed lg:static inset-y-0 right-0 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col z-40 transform translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-lg lg:shadow-none h-[calc(100vh-6rem)] lg:h-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-3">
+                <h2 class="font-bold text-slate-900 dark:text-white text-base">فهرس فصول الكتاب</h2>
+                <button id="sidebarClose" class="p-1 rounded-md text-slate-400 hover:text-slate-600 lg:hidden">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Search input & stats -->
+            <div class="mb-3 relative">
+                <input type="text" id="searchInput" placeholder="ابحث في فصول الطب النبوي..." class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition">
+                <div id="searchStats" class="text-xs text-slate-500 dark:text-slate-400 px-1 mt-1.5 flex items-center justify-between"></div>
+                <div id="quickJumpResults" class="mt-2 max-h-56 overflow-y-auto space-y-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-md hidden z-20 p-1 absolute left-0 right-0"></div>
+            </div>
+
+            <!-- Chapter List -->
+            <nav id="chapterList" class="flex-1 overflow-y-auto space-y-1 pr-1">
+                <!-- Populated dynamically from manifest.json -->
+            </nav>
+        </aside>
+
+        <!-- Main Reading Area -->
+        <main class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm flex flex-col min-h-[70vh] transition-colors">
+            <div id="chapterContent" class="flex-1">
+                <p class="text-center text-slate-400 py-16">جاري التحميل...</p>
+            </div>
+
+            <!-- Pagination Bottom Bar -->
+            <div class="flex items-center justify-between pt-6 mt-10 border-t border-slate-100 dark:border-slate-800">
+                <button id="prevBtn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    ← الفصل السابق
+                </button>
+                <span id="pageIndicator" class="text-xs text-slate-400 font-semibold"></span>
+                <button id="nextBtn" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    الفصل التالي →
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-400 transition-colors">
+        الطب النبوي — الإمام شمس الدين أبو عبد الله محمد بن أبي بكر ابن قيم الجوزية
+    </footer>
+
+    <script src="./script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+    </script>
+</body>
+</html>

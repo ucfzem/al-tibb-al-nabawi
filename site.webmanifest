@@ -1,0 +1,18 @@
+{
+  "name": "الطب النبوي — ابن قيم الجوزية",
+  "short_name": "الطب النبوي",
+  "description": "كتاب الطب النبوي لابن قيم الجوزية — قراءة كاملة مع بحث وتنقّل",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#065f46",
+  "categories": ["books", "education", "medical"],
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
