@@ -278,10 +278,11 @@ const tts = {
   index: 0,
   state: 'stopped',
   voice: null,
+  timer: null,
   pickVoice() {
     if (!this.synth) return;
     const voices = this.synth.getVoices() || [];
-    this.voice = voices.find((v) => /^ar/i.test(v.lang)) || voices.find((v) => /ar/i.test(v.name)) || null;
+    this.voice = voices.find((v) => /^ar/i.test(v.lang)) || voices.find((v) => /ar/i.test(v.lang + ' ' + v.name)) || null;
   },
   clearHighlight() {
     chapterContent.querySelectorAll('.tts-highlight').forEach((el) => el.classList.remove('tts-highlight'));
@@ -293,32 +294,52 @@ const tts = {
   },
   start() {
     if (!this.supported) { alert('عذراً، متصفحك لا يدعم القراءة الصوتية.'); return; }
-    const blocks = Array.from(chapterContent.querySelectorAll('h2, h3, p')).filter((el) => el.textContent.trim().length > 1);
+    const blocks = Array.from(chapterContent.querySelectorAll('p')).filter((el) => el.textContent.trim().length > 5);
     if (!blocks.length) { alert('لا يوجد نص لقراءته.'); return; }
+    clearTimeout(this.timer);
     if (this.synth) this.synth.cancel();
     this.pickVoice();
     this.queue = blocks;
     this.index = 0;
     this.ui('playing');
-    this.playNext();
+    this.timer = setTimeout(() => this.playNext(), 150);
   },
   playNext() {
+    if (this.state !== 'playing') return;
     if (this.index >= this.queue.length) { this.stop(); return; }
     this.clearHighlight();
     const el = this.queue[this.index];
     el.classList.add('tts-highlight');
     try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
-    const u = new SpeechSynthesisUtterance(el.textContent);
-    u.lang = this.voice ? this.voice.lang : 'ar-SA';
+    const u = new SpeechSynthesisUtterance(el.textContent.trim());
     if (this.voice) u.voice = this.voice;
+    u.lang = this.voice ? this.voice.lang : 'ar-SA';
     u.rate = 0.95;
-    u.onend = () => { if (this.state === 'playing') { this.index++; this.playNext(); } };
-    u.onerror = () => { if (this.state === 'playing') { this.index++; this.playNext(); } };
+    u.onend = () => {
+      if (this.state !== 'playing') return;
+      this.index++;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.playNext(), 320);
+    };
+    u.onerror = (e) => {
+      if (this.state !== 'playing') return;
+      if (e && (e.error === 'interrupted' || e.error === 'canceled')) return;
+      this.index++;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.playNext(), 320);
+    };
     this.synth.speak(u);
   },
-  pause() { if (this.synth) this.synth.pause(); this.ui('paused'); },
-  resume() { if (this.synth) this.synth.resume(); this.ui('playing'); },
-  stop() { if (this.synth) this.synth.cancel(); this.clearHighlight(); this.queue = []; this.index = 0; this.ui('stopped'); },
+  pause() { clearTimeout(this.timer); if (this.synth) this.synth.pause(); this.ui('paused'); },
+  resume() {
+    this.ui('playing');
+    if (this.synth) this.synth.resume();
+    if (this.synth && !this.synth.speaking && this.index < this.queue.length) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.playNext(), 150);
+    }
+  },
+  stop() { clearTimeout(this.timer); if (this.synth) this.synth.cancel(); this.clearHighlight(); this.queue = []; this.index = 0; this.ui('stopped'); },
   toggle() {
     if (!this.supported) { alert('عذراً، متصفحك لا يدعم القراءة الصوتية.'); return; }
     if (this.state === 'playing') this.pause();
