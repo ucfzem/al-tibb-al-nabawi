@@ -4,7 +4,8 @@
 let chaptersManifest = [];
 let loadedChapters = [];
 let currentChapterIndex = 0;
-let currentFontSize = 18;
+const FS_KEY = 'tibb_fontSize';
+let currentFontSize = Math.min(28, Math.max(14, parseInt(localStorage.getItem(FS_KEY), 10) || 18));
 let activeKeyboardIndex = -1;
 let searchDebounce = null;
 
@@ -38,6 +39,11 @@ function stripHtml(html) {
 function chapterText(ch) {
   if (ch._text == null) ch._text = stripHtml(ch.content).toLowerCase();
   return ch._text;
+}
+function fetchWithTimeout(url, ms) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms || 12000);
+  return fetch(url, { signal: controller.signal, cache: 'no-cache' }).finally(() => clearTimeout(id));
 }
 
 /* ---- 1. Dark/Light ---- */
@@ -129,6 +135,7 @@ function applyFontSize() {
     el.style.fontSize = currentFontSize + 'px';
   });
   fontSizeIndicator.innerText = currentFontSize + 'px';
+  try { localStorage.setItem(FS_KEY, currentFontSize); } catch (e) {}
 }
 
 function renderChapters(filter) {
@@ -265,12 +272,12 @@ nextBtn.addEventListener('click', () => { if (currentChapterIndex < loadedChapte
 /* ---- 10. Boot ---- */
 async function initReader() {
   try {
-    const res = await fetch('manifest.json', { cache: 'no-cache' });
+    const res = await fetchWithTimeout('manifest.json', 12000);
     if (!res.ok) throw new Error('manifest');
     chaptersManifest = await res.json();
     loadedChapters = await Promise.all(chaptersManifest.map(async (meta) => {
       try {
-        const r = await fetch(meta.file);
+        const r = await fetchWithTimeout(meta.file, 12000);
         const data = await r.json();
         return { id: meta.id, title: meta.title, file: meta.file, content: data.content || '' };
       } catch (e) {
@@ -284,7 +291,9 @@ async function initReader() {
     renderChapters('');
     loadChapter(0);
   } catch (error) {
-    chapterContent.innerHTML = '<p class="text-center text-slate-400 py-16">المحتوى قيد التجهيز…</p>';
+    chapterContent.innerHTML = '<div class="text-center py-16"><p class="text-slate-400 mb-4">تعذّر تحميل الفهرس — تحقّق من الاتصال بالإنترنت.</p><button id="retryBtn" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-xl transition">إعادة المحاولة</button></div>';
+    const rb = document.getElementById('retryBtn');
+    if (rb) rb.addEventListener('click', initReader);
   }
 }
 initReader();
