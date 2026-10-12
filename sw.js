@@ -1,5 +1,5 @@
-const CACHE = 'tibb-nabawi-v1.0.7';
-const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg', './manifest.json'];
+const CACHE = 'tibb-nabawi-v1.0.8';
+const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './manifest.json'];
 const CDN = [
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap'
