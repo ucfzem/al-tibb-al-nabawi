@@ -1,9 +1,27 @@
-const CACHE = 'tibb-nabawi-v1.0.6';
-const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg'];
+const CACHE = 'tibb-nabawi-v1.0.7';
+const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg', './manifest.json'];
+const CDN = [
+  'https://cdn.tailwindcss.com',
+  'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&display=swap'
+];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE).catch(() => {})));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await Promise.all(CORE.map((u) => cache.add(u).catch(() => {})));
+    try {
+      const res = await fetch('./manifest.json');
+      if (res && res.ok) {
+        const man = await res.clone().json();
+        await cache.put('./manifest.json', res);
+        await Promise.all(man.map((m) => cache.add(m.file).catch(() => {})));
+      }
+    } catch (e) {}
+    await Promise.all(CDN.map((u) =>
+      fetch(u, { mode: 'no-cors' }).then((r) => { if (r) return cache.put(u, r); }).catch(() => {})
+    ));
+  })());
 });
 
 self.addEventListener('activate', (event) => {
