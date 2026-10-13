@@ -336,7 +336,7 @@ function renderChapters(filter) {
         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800');
     const badge = (q && count > 0) ? '<span class="text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded shrink-0 mr-2">' + count + '</span>' : '';
     const span = document.createElement('span');
-    span.className = 'truncate';
+    span.className = 'flex-1 text-right whitespace-normal break-words leading-snug';
     span.textContent = (idx + 1) + '. ' + (ch.title || '');
     btn.appendChild(span);
     if (badge) btn.insertAdjacentHTML('beforeend', badge);
@@ -381,7 +381,7 @@ function updateGlobalSearchStats(query) {
     const cap = r.matches.slice(0, 50);
     quickJumpResults.innerHTML = cap.map((m, i) =>
       '<button type="button" data-i="' + i + '" class="jump-item w-full text-right px-3 py-2 text-xs hover:bg-amber-50 dark:hover:bg-slate-700 rounded-lg transition border-b border-slate-100 dark:border-slate-700 last:border-none flex items-center justify-between">' +
-      '<span class="font-semibold text-slate-700 dark:text-slate-300 truncate">' + (m.ch.title || '') + '</span>' +
+      '<span class="flex-1 text-right font-semibold text-slate-700 dark:text-slate-300 whitespace-normal break-words leading-snug">' + (m.ch.title || '') + '</span>' +
       (m.count > 0 ? '<span class="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded shrink-0 mr-2">' + m.count + '</span>' : '') +
       '</button>').join('');
     quickJumpResults.querySelectorAll('.jump-item').forEach((el) => {
