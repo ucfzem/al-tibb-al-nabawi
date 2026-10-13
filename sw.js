@@ -1,4 +1,4 @@
-const CACHE = 'tibb-nabawi-v1.1.0';
+const CACHE = 'tibb-nabawi-v1.1.1';
 const CORE = ['./', './index.html', './script.js', './site.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './manifest.json'];
 const CDN = [
   'https://cdn.tailwindcss.com',
@@ -43,7 +43,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k.startsWith('tibb-nabawi-')).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
